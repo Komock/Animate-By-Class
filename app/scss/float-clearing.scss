@@ -1,0 +1,13 @@
+//------ Float Clearing ------//
+.header:before,
+.wrap:before {
+	content: " ";
+	display: table;
+}
+
+.header:after,
+.wrap:after {
+	clear: both;
+	content: " ";
+	display: table;
+}
