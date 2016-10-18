@@ -5,7 +5,7 @@ var gulp = require('gulp'),
     cleanCSS = require('gulp-clean-css'),
     browserSync = require('browser-sync').create(),
     browserify = require('gulp-browserify'),
-    jade = require('gulp-jade'),
+    pug = require('gulp-pug'),
     uglify = require('gulp-uglify');
 
 //----- Config -----//
@@ -26,10 +26,10 @@ gulp.task('sass', function () {
         .pipe(gulp.dest( build + 'css/' ));
 });
 
-// JADE
-gulp.task('jade', function () {
-    return gulp.src( src + 'jade/index.jade')
-        .pipe(jade({
+// Pug
+gulp.task('pug', function () {
+    return gulp.src( src + 'pug/index.pug')
+        .pipe(pug({
             pretty: true
         }))
         .pipe(gulp.dest( build ));
@@ -53,10 +53,11 @@ gulp.task('bundle-js', function () {
 
 // Watch
 gulp.task('watch', function() {
-    gulp.watch( src + 'scss/*.scss', ['sass']);
-    gulp.watch( [src + 'jade/*.jade', src + 'jade/includes/*.jade'], ['jade']);
-    gulp.watch( src + 'js/**/*.js', ['bundle-js-custom']);
+    gulp.watch( src + 'scss/*.scss', gulp.series('sass') );
+    gulp.watch( [src + 'pug/*.pug', src + 'pug/includes/*.pug'], gulp.series('pug') );
+    gulp.watch( src + 'js/**/*.js', gulp.series('bundle-js') );
 });
 
 // default
-gulp.task('default', ['jade', 'sass', 'watch', 'bundle-js', 'browser-sync']);
+gulp.task('default', gulp.series( 'pug', 'sass', 'bundle-js', 'browser-sync', 'watch' ) );
+// gulp.task('default', ['pug', 'sass', 'watch', 'bundle-js', 'browser-sync']);
